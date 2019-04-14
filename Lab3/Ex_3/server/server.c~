@@ -1,0 +1,148 @@
+#include<stdio.h>
+#include<string.h>
+#include<unistd.h>
+#include<stdlib.h>
+#include<sys/stat.h>
+#include<sys/socket.h>
+#include<sys/types.h>
+#include<netinet/in.h>
+#include<ctype.h>
+#include<sys/wait.h> 
+
+void main()
+{
+
+int sockfd,errfd,newsockfd,len,w[1],x[1],y[1],z[1];
+int recvb;
+int portno = 8555;
+char mobuff[100],recvbuff[100];
+int odd[10],even[10];
+struct sockaddr_in serveraddr,cliaddr;
+
+serveraddr.sin_family = AF_INET;
+serveraddr.sin_port = htons(portno);
+serveraddr.sin_addr.s_addr = htonl(INADDR_ANY);
+
+
+sockfd = socket(AF_INET,SOCK_STREAM,0);
+bind(sockfd,(struct sockaddr*)&serveraddr,sizeof(serveraddr));
+listen(sockfd,5);
+sizeof(cliaddr);
+newsockfd = accept(sockfd,(struct sockaddr *)&cliaddr,&len);
+while(1){
+int pid;
+pid = fork();
+
+if(pid==0)
+{
+while(1)
+{     recv(newsockfd,w,sizeof(w),0);
+      send(newsockfd,x,sizeof(x),0);
+      strcpy(recvbuff,"");
+      recvbuff[0]='\0';
+      recv(newsockfd,recvbuff,sizeof(recvbuff),0);
+       if(strcmp(recvbuff,"exit")==0)
+      {
+         break;
+      }
+      char alph[50];
+      strcpy(alph,"");
+      alph[0]='\0';
+      int k,m=0;
+      k=strlen(recvbuff);
+      int l=0;
+      while(k!=m)
+      {     
+          if(isalpha(recvbuff[m]))
+            {
+                alph[l]=recvbuff[m];
+                l++;
+             }
+          m++;
+       }
+
+      int i;
+      char temp1;
+      for(i=0;i<strlen(alph);i++)
+	{
+          int j;
+	  for(j=0;j<strlen(alph);j++)
+	    {
+		if(alph[j]>alph[i])
+			{
+			 temp1=alph[i];
+			 alph[i]=alph[j];
+			 alph[j]=temp1;
+			}
+	     }
+	 }
+
+send(newsockfd,alph,sizeof(alph),0);
+break;
+
+
+}
+exit(0);
+}
+
+
+else
+{wait(NULL);
+while(1)
+{     send(newsockfd,y,sizeof(y),0);
+      recv(newsockfd,z,sizeof(z),0);
+      strcpy(mobuff,"");
+      mobuff[0]='\0';
+      recv(newsockfd,mobuff,sizeof(mobuff),0);
+      if(strcmp(mobuff,"exit")==0)
+      {
+         break;
+      }
+     
+      char dig[50];
+      strcpy(dig,"");
+      dig[0]='\0';
+      int h,g=0;
+      h=strlen(mobuff);
+      printf("%d",h);
+      int b=0;
+      
+      while(h!=b)
+      {     
+          if(!isalpha(mobuff[g]))
+            {
+                dig[b]=mobuff[g];
+                b++;
+             }
+          g++;
+       }
+
+      int s;
+      char temp2;
+      for(s=0;s<strlen(dig);s++)
+	{
+          int t;
+	  for(t=0;t<strlen(dig);t++)
+	    {
+		if(dig[t]>dig[s])
+			{
+			 temp2=dig[s];
+			 dig[s]=dig[t];
+			 dig[t]=temp2;
+			}
+	     }
+	 }
+
+send(newsockfd,dig,sizeof(dig),0);
+break;
+
+
+}
+
+}
+}
+
+close(newsockfd);
+close(sockfd);
+
+}

@@ -1,0 +1,80 @@
+#include<string.h>
+#include<arpa/inet.h>
+#include<stdlib.h>
+#include<stdio.h>
+#include<unistd.h>
+#include<sys/socket.h>
+#include<sys/types.h>
+#include<netinet/in.h>
+#include<fcntl.h>
+#include<sys/stat.h>
+#include<sys/wait.h> 
+
+
+
+void main(){
+
+int sockfd,g[1],errfd,portno,sendb,recvb,w[1],x[1],y[1],z[1];
+portno = 8555;
+char input[50];
+char sinput[50];
+char fin[50];
+char sfin[50];
+struct sockaddr_in serveraddr;
+sockfd=socket(AF_INET,SOCK_STREAM,0);
+
+serveraddr.sin_family=AF_INET;
+serveraddr.sin_port=htons(portno);
+serveraddr.sin_addr.s_addr=inet_addr("127.0.0.1");
+
+connect(sockfd,(struct sockaddr*)&serveraddr,sizeof(serveraddr));
+
+
+while(1){
+printf("Enter The string");
+       input[0]='\0';
+       scanf("%s",input);
+       puts(input);
+       sinput[0]='\0';
+       strcpy(sinput,input);
+       puts(sinput);
+
+if(strcmp(input,"exit")==0)
+       { 
+         break;
+
+       }
+       
+   int pid;
+   pid = fork();
+
+while(1)
+{    
+     
+    
+       if(pid==0)
+        {  puts(input);
+           send(sockfd,w,sizeof(w),0);
+           recv(sockfd,x,sizeof(x),0);
+           send(sockfd,input,sizeof(input),0);
+           recv(sockfd,fin,sizeof(fin),0);
+           puts(fin);
+           exit(0);
+        }
+        else
+
+        {  wait(NULL);
+           puts(sinput);
+           recv(sockfd,y,sizeof(y),0);
+           send(sockfd,z,sizeof(z),0);
+           send(sockfd,sinput,sizeof(sinput),0);
+           recv(sockfd,sfin,sizeof(sfin),0);
+           puts(sfin);
+           break;
+        }
+    
+
+}
+}
+close(sockfd);
+}
