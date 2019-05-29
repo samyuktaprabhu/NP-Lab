@@ -32,7 +32,8 @@ printf("\nConnection error.");
 exit(0);
 }
 printf("\nSocket connected.");
-printf("\n\n");
+printf("\n");
+printf("\n);
 ////////////////////////////////////////////////////////////////////
 int arr[100];
 int i,N,num;
